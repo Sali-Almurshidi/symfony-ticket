@@ -39,6 +39,7 @@ class RegistrationController extends AbstractController
                     $form->get('password')->getData()
                 )
             );
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
@@ -49,7 +50,7 @@ class RegistrationController extends AbstractController
             //$email->sendEmail();
 
             // back to login page
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('app_login');
         }
 
         return $this->render('registration/register.html.twig', [
