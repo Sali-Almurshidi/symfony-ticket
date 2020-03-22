@@ -46,12 +46,12 @@ class NewPasswordController extends AbstractController
                 $entityManager->flush();
 
                 return $this->redirectToRoute('app_login');
+
             }
-        } else {
-            return $this->render('new_password/newPassword.html.twig', [
-                'newPasswordForm' => $form->createView(),
-            ]);
         }
+        return $this->render('new_password/newPassword.html.twig', [
+            'newPasswordForm' => $form->createView(),
+        ]);
 
 
     }

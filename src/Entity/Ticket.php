@@ -68,6 +68,11 @@ class Ticket
      */
     private $commentId;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     */
+    private $agentId;
+
     public function __construct()
     {
         $this->commentId = new ArrayCollection();
@@ -95,7 +100,7 @@ class Ticket
         return $this->date;
     }
 
-    public function setDate(?\DateTimeInterface $date): self
+    public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
 
@@ -107,7 +112,7 @@ class Ticket
         return $this->openTime;
     }
 
-    public function setOpenTime(?\DateTimeInterface $openTime): self
+    public function setOpenTime(\DateTimeInterface $openTime): self
     {
         $this->openTime = $openTime;
 
@@ -213,6 +218,18 @@ class Ticket
                 $commentId->setTicketId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAgentId(): ?User
+    {
+        return $this->agentId;
+    }
+
+    public function setAgentId(?User $agentId): self
+    {
+        $this->agentId = $agentId;
 
         return $this;
     }

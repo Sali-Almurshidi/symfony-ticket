@@ -9,7 +9,34 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <h1>Hello {{ customerName }}! ✅</h1>
 
+    {{ form_start(addTicketForm) }}
+
+    {# To display all the form childs #}
+
+    {{ form_widget(addTicketForm) }}
+
+    <button> Add </button>
+
+    {{ form_end(addTicketForm) }}
+    <br>
+    {#<h3>total of open Ticket {{ totalOpenTicket }}</h3>#}
+    <br>
+    {% for ticket in tickets %}
+
+        {% if ticket.ticketStatus != 'doNotFix' %}
+
+        {{ ticket.ticketTitle }}
+
+        {{ ticket.ticketStatus }}
+
+        <button><a href="{{ path('customer_ticket', {'ticket': ticket.id}) }}" >show</a></button>
+
+        <br>
+        {% endif %}
+    {% endfor %}
+
+    <button><a href="{{ path('app_logout')}}" >Logout</a></button>
 </div>
 {% endblock %}

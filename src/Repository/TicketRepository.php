@@ -36,6 +36,17 @@ class TicketRepository extends ServiceEntityRepository
     }
     */
 
+    public function countValueNambers($value)
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.ticketStatus = :val')
+            ->setParameter('val', $value)
+            ->select('count(t.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+    }
+
     /*
     public function findOneBySomeField($value): ?Ticket
     {

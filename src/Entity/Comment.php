@@ -30,6 +30,7 @@ class Comment
      * @ORM\Column(type="integer")
      */
     private $commentStatus;
+    // 0 public 1 private
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Ticket", inversedBy="commentId")
