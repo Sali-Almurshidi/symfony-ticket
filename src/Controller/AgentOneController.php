@@ -14,8 +14,10 @@ use \App\Entity\User;
 
 class AgentOneController extends AbstractController
 {
-    private $agentOneLevel , $publicStatus = 0;
-    private $agentTowLevel , $privateStatus = 1;
+    const AGENT_LEVEL_ONE = 0;
+    const AGENT_LEVEL_TOW = 1;
+    const PUBLIC_STATUS = 0;
+    const PRIVATE_STATUS = 1;
 
 
     /**
@@ -42,8 +44,8 @@ class AgentOneController extends AbstractController
 
         return $this->render('agent_one/agentOneHomePage.html.twig', [
             'agentName' => $user->getFirstName(),
-            'tickets' =>  $this->allOpenTickets(),
-            'agentTickets' =>  $this->allAgentTickets($user)
+            'tickets' => $this->allOpenTickets(),
+            'agentTickets' => $this->allAgentTickets($user)
         ]);
     }
 
@@ -76,7 +78,7 @@ class AgentOneController extends AbstractController
         if (!$ticketObject) {
             throw $this->createNotFOundException('No ticket found');
         }
-        $ticketObject->setAgentLevel($this->agentTowLevel);
+        $ticketObject->setAgentLevel(self::AGENT_LEVEL_TOW);
         $em->flush();
     }
 
@@ -87,7 +89,7 @@ class AgentOneController extends AbstractController
     {
         // get all open ticket with agent level 0
         $em = $this->getDoctrine()->getRepository(Ticket::class);
-       return $this->openTicket = $em->openTicketLevel('open', $this->agentOneLevel);
+        return $this->openTicket = $em->openTicketLevel('open', self::AGENT_LEVEL_ONE);
     }
 
     /**
@@ -98,7 +100,7 @@ class AgentOneController extends AbstractController
     {
         // get all in progress ticket with agent level 0
         $em = $this->getDoctrine()->getRepository(Ticket::class);
-        return $this->openTicket = $em->openAgentTickets('inprogress', $this->agentOneLevel , $user);
+        return $this->openTicket = $em->openAgentTickets('inprogress', self::AGENT_LEVEL_ONE, $user);
     }
 
     /**
@@ -107,8 +109,8 @@ class AgentOneController extends AbstractController
      * @return Response
      * @throws \Exception
      */
-    public function ticketDetails(Ticket $ticket , Request $request){
-
+    public function ticketDetails(Ticket $ticket, Request $request)
+    {
 
         /** @var Comment $comment */
         $comment = new Comment();
@@ -116,15 +118,14 @@ class AgentOneController extends AbstractController
         $form->handleRequest($request);
 
 
-        if ($form->isSubmitted()) {
-            $status = $this->publicStatus ;
 
-            if($form->getData()->getCommentStatus() != 0){
-                $status = $this->privateStatus ;
+        if ($form->isSubmitted()) {
+
+            $status = self::PUBLIC_STATUS;
+
+            if ($form->getData()->getCommentStatus() != 0) {
+                $status = self::PRIVATE_STATUS;
             }
-            //if(isset()){
-            //    $status = 1 ;
-          //  }
 
             $comment->setCommentStatus($status);
             $comment->setTicketId($ticket);
@@ -144,14 +145,29 @@ class AgentOneController extends AbstractController
         $form = $form->createView();
 
 
-        return $this->render('agent_one/showTicket.html.twig',
-            ['ticket' => $ticket,
-                'commentForm' => $form,
-                'comments' => $comments,
-                //'totalOpenTicket'=>$openResult
+        if (isset($_POST['close'])) {
+           /**@var Comment $comments */
+          //  var_dump($comments->getTicketId());
+            $ticket->setCloseTime(new \DateTime());
+            $ticket->setTicketStatus('close');
+           // throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($ticket);
+            $entityManager->flush();
+           // $comments[0]->getTicketId()->setCloseTime(new \DateTime());
+            return $this->redirectToRoute('agent_one');
+        }//else{
+            return $this->render('agent_one/showTicket.html.twig',
+                ['ticket' => $ticket,
+                    'commentForm' => $form,
+                    'comments' => $comments,
+                    //'totalOpenTicket'=>$openResult
 
-            ]);
+                ]);
+      //  }
+
     }
+
 
 }
 

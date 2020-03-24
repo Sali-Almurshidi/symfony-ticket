@@ -1,9 +1,13 @@
 <h1>Ticket Details ✅</h1>
 <button><a href="{{ path('agent_one') }}">Home page </a></button>
 <br>
+<form method="post"><button type="submit" name="close">close this ticket</button></form>
+
+
+
 <h5>Title {{ ticket.ticketTitle }}</h5>
 <br>
-{{ ticket.date|date("m/d/Y") }}
+{{ ticket.date|date("m/d/Y h:m") }}
 <br>
 {{ ticket.ticketStatus }}
 <br>
@@ -13,18 +17,18 @@
 {#to disply all the comments for this ticket from the customer or from the admin but just the public on#}
 
 {% for comment in comments %}
-    {% if comment.getCommentStatus != 1 %}
-        {{ comment.date|date("m/d/Y") }}
-        <br>
-        {#call get user is type user to get user name realtion one to many #}
-        {{ comment.getUserId().firstName }}
-        {# {{ comment.getTicketId().getCustomerId().firstName }}#}
-        <br>
-        {{ comment.content }}
-        <br>
-        <h6>--------------------------------------------</h6>
-        <br>
-    {% endif %}
+
+    {{ comment.date|date("m/d/Y h:m") }}
+    <br>
+    {#call get user is type user to get user name realtion one to many #}
+    {{ comment.getUserId().firstName }}
+    {# {{ comment.getTicketId().getCustomerId().firstName }}#}
+    <br>
+    {{ comment.content }}
+    <br>
+    <h6>--------------------------------------------</h6>
+    <br>
+
 {% endfor %}
 
 <br>
@@ -35,7 +39,9 @@
 
     {{ form_widget(commentForm) }}
 
-<button> Add  </button>
+<button> Add</button>
 
 {{ form_end(commentForm) }}
+
+
 
