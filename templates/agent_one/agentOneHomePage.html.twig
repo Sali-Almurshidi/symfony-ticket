@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AgentOneController!{% endblock %}
+
+{% block body %}
+    <style>
+        .example-wrapper {
+            margin: 1em auto;
+            max-width: 800px;
+            width: 95%;
+            font: 18px/1.5 sans-serif;
+        }
+
+        .example-wrapper code {
+            background: #F5F5F5;
+            padding: 2px 6px;
+        }
+    </style>
+
+    <div class="example-wrapper">
+        <button><a href="{{ path('app_logout') }}">Logout</a></button>
+        <h1>Hello {{ agentName }}! ✅</h1>
+
+        <h3>open tickets</h3>
+        <form method="post">
+
+            {% for ticket in tickets %}
+                {{ ticket.id }}
+                {{ ticket.ticketTitle }}
+                {{ ticket.ticketStatus }}
+
+                <button type="submit" name="select" value="{{ ticket.id }}">select</button>
+                <button type="submit" name="send" value="{{ ticket.id }}"> send to agent2</button>
+
+                <br>
+
+            {% endfor %}
+
+            <h3>ticket in progress</h3>
+
+            {% for agentTicket in agentTickets %}
+
+                {{ agentTicket.id }}
+                {{ agentTicket.ticketTitle }}
+                {{ agentTicket.ticketStatus }}
+
+                <button><a href="{{ path( 'agent_one_ticket', {'ticket' : agentTicket.id} ) }}">show</a></button>
+
+                <br>
+            {% endfor %}
+
+        </form>
+    </div>
+{% endblock %}

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Ticket;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -36,7 +37,48 @@ class TicketRepository extends ServiceEntityRepository
     }
     */
 
-    public function countValueNambers($value)
+    public function openTicketLevel(string $status ,int $level)
+    {
+        //show ticket status = 'open' && agent level = 0  for agent 1
+        //show ticket status = 'open' && agent level = 1  for agent 2
+
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.ticketStatus = :status')
+            ->setParameter('status', $status)
+            ->andWhere('t.agentLevel = :level')
+            ->setParameter('level', $level)
+            //->orderBy('t.id', 'ASC')
+            //->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
+     * @param string $status
+     * @param int $level
+     * @param User $user
+     * @return mixed
+     */
+    public function openAgentTickets(string $status , int $level , User $user ){
+        //show ticket status = 'inprogress' && agent level = 0  for agent 1 with agent id
+        //show ticket status = 'inprogress' && agent level = 1  for agent 2 with agent id
+
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.ticketStatus = :status')
+            ->setParameter('status', $status)
+            ->andWhere('t.agentLevel = :level')
+            ->setParameter('level', $level)
+            ->andWhere('t.agentId = :user')
+            ->setParameter('user', $user)
+            //->orderBy('t.id', 'ASC')
+            //->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+  /*  public function countValueNumbers($value)
     {
         return $this->createQueryBuilder('t')
             ->andWhere('t.ticketStatus = :val')
@@ -44,8 +86,7 @@ class TicketRepository extends ServiceEntityRepository
             ->select('count(t.id)')
             ->getQuery()
             ->getSingleScalarResult();
-
-    }
+    }*/
 
     /*
     public function findOneBySomeField($value): ?Ticket

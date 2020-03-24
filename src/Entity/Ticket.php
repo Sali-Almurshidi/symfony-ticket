@@ -73,6 +73,17 @@ class Ticket
      */
     private $agentId;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $agentLevel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Comment", inversedBy="ticketNew")
+     */
+    private $comment;
+    // 0 level 1 && 1 level 2
+
     public function __construct()
     {
         $this->commentId = new ArrayCollection();
@@ -230,6 +241,30 @@ class Ticket
     public function setAgentId(?User $agentId): self
     {
         $this->agentId = $agentId;
+
+        return $this;
+    }
+
+    public function getAgentLevel(): ?int
+    {
+        return $this->agentLevel;
+    }
+
+    public function setAgentLevel(int $agentLevel): self
+    {
+        $this->agentLevel = $agentLevel;
+
+        return $this;
+    }
+
+    public function getComment(): ?Comment
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?Comment $comment): self
+    {
+        $this->comment = $comment;
 
         return $this;
     }

@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -42,6 +44,16 @@ class Comment
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="commentsId")
      */
     private $userId;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Ticket", mappedBy="comment")
+     */
+    private $ticketNew;
+
+    public function __construct()
+    {
+        $this->ticketNew = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -104,6 +116,37 @@ class Comment
     public function setUserId(?User $userId): self
     {
         $this->userId = $userId;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Ticket[]
+     */
+    public function getTicketNew(): Collection
+    {
+        return $this->ticketNew;
+    }
+
+    public function addTicketNew(Ticket $ticketNew): self
+    {
+        if (!$this->ticketNew->contains($ticketNew)) {
+            $this->ticketNew[] = $ticketNew;
+            $ticketNew->setComment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTicketNew(Ticket $ticketNew): self
+    {
+        if ($this->ticketNew->contains($ticketNew)) {
+            $this->ticketNew->removeElement($ticketNew);
+            // set the owning side to null (unless already changed)
+            if ($ticketNew->getComment() === $this) {
+                $ticketNew->setComment(null);
+            }
+        }
 
         return $this;
     }

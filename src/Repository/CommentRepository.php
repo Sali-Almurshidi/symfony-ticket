@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Comment;
+use App\Entity\Ticket;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -47,4 +48,19 @@ class CommentRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    /**
+     * @param Ticket $ticket
+     */
+    public function getAllComments(Ticket $ticket){
+        // display all comments for this ticket
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.ticketId = :val')
+            ->setParameter('val', $ticket->getId())
+           // ->orderBy('c.id', 'ASC')
+            //->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 }

@@ -40,6 +40,7 @@ class CustomerController extends AbstractController
             $ticket->setReopen(0);
             $ticket->setCustomerId($user);
             $ticket->setPriority(0);
+            $ticket->setAgentLevel(0);
             $ticket->setOpenTime(new \DateTime('@' . strtotime('now')));
 
             $entityManager = $this->getDoctrine()->getManager();
