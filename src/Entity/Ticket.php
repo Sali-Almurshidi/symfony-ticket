@@ -82,6 +82,11 @@ class Ticket
      * @ORM\ManyToOne(targetEntity="App\Entity\Comment", inversedBy="ticketNew")
      */
     private $comment;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $canReoopen;
     // 0 level 1 && 1 level 2
 
     public function __construct()
@@ -265,6 +270,18 @@ class Ticket
     public function setComment(?Comment $comment): self
     {
         $this->comment = $comment;
+
+        return $this;
+    }
+
+    public function getCanReoopen(): ?bool
+    {
+        return $this->canReoopen;
+    }
+
+    public function setCanReoopen(?bool $canReoopen): self
+    {
+        $this->canReoopen = $canReoopen;
 
         return $this;
     }

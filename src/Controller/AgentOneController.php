@@ -12,6 +12,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use \App\Entity\User;
 
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
+
+
 class AgentOneController extends AbstractController
 {
     const AGENT_LEVEL_ONE = 0;
@@ -118,7 +122,6 @@ class AgentOneController extends AbstractController
         $form->handleRequest($request);
 
 
-
         if ($form->isSubmitted()) {
 
             $status = self::PUBLIC_STATUS;
@@ -146,25 +149,38 @@ class AgentOneController extends AbstractController
 
 
         if (isset($_POST['close'])) {
-           /**@var Comment $comments */
-          //  var_dump($comments->getTicketId());
             $ticket->setCloseTime(new \DateTime());
             $ticket->setTicketStatus('close');
-           // throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
+            $ticket->setCanReoopen(true);
+
+            //$process = new Process(['ls', '-lsa']);
+            // $process->setTimeout(3600);
+            //$process->setEnv($ticket->setCanReoopen(false));
+           // $process->setTimeout(120);
+            //$process->run();
+           //  $process->start();
+
+
+            /*     if ($process->getTimeout() == null) {
+                     $ticket->setCanReoopen(false);
+                     //$process->stop();
+                    // usleep(200000);
+                 }*/
+
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($ticket);
             $entityManager->flush();
-           // $comments[0]->getTicketId()->setCloseTime(new \DateTime());
-            return $this->redirectToRoute('agent_one');
-        }//else{
-            return $this->render('agent_one/showTicket.html.twig',
-                ['ticket' => $ticket,
-                    'commentForm' => $form,
-                    'comments' => $comments,
-                    //'totalOpenTicket'=>$openResult
 
-                ]);
-      //  }
+            return $this->redirectToRoute('agent_one');
+        }
+
+
+        return $this->render('agent_one/showTicket.html.twig',
+            ['ticket' => $ticket,
+                'commentForm' => $form,
+                'comments' => $comments,
+            ]);
 
     }
 

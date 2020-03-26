@@ -37,6 +37,7 @@ class TicketRepository extends ServiceEntityRepository
     }
     */
 
+
     public function openTicketLevel(string $status ,int $level)
     {
         //show ticket status = 'open' && agent level = 0  for agent 1
